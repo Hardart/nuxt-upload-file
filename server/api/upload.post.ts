@@ -13,7 +13,8 @@ export default defineEventHandler(async event => {
 
 async function saveFile(file: Buffer, folder: string) {
   folder = folder == '' ? 'default' : folder
-  const path = (ext: string = 'jpg', size?: number) => `/images/blog/${folder}/blog_img${size ? '_' + size : ''}.${ext}`
+  const id = Date.now()
+  const path = (ext: string = 'jpg', size?: number) => `/images/blog/${folder}/blog_img${size ? '_' + size : ''}_${id}.${ext}`
   // if (ext === 'heic') {
   //   const buffer = await convert({ buffer: file.data, format: 'JPEG' })
   //   name = `avatar.jpg`

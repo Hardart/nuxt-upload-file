@@ -1,11 +1,21 @@
 <script lang="ts" setup>
-const src = ref<string>('')
+const src = ref('')
+const avatarSrc = ref('')
 const uploadProgress = ref(0)
-const isFileLoad = ref(false)
+const isShowAvatarDrag = ref(false)
+const form = ref<HTMLFormElement | null>(null)
 
-const onSubmit = async (form: HTMLFormElement) => {
-  if (!form) return
-  uploadForm('/api/upload', form)
+const onSubmit = async () => {
+  if (!form.value) return
+  uploadForm('/api/upload', form.value)
+  form.value.reset()
+}
+
+const onConfirm = async (props: object) => {
+  if (!form.value) return
+
+  avatarSrc.value = await $fetch('/api/crop-image', { body: { props, src: src.value }, method: 'POST' })
+  isShowAvatarDrag.value = false
 }
 
 function uploadForm(url: string, formElement: HTMLFormElement) {
@@ -21,6 +31,7 @@ function uploadForm(url: string, formElement: HTMLFormElement) {
       // Uploaded
       const fileName = xhr.response
       if (fileName.trim()) src.value = fileName
+      isShowAvatarDrag.value = true
     }
   }
   xhr.send(form)
@@ -28,13 +39,17 @@ function uploadForm(url: string, formElement: HTMLFormElement) {
 </script>
 
 <template>
-  <form @submit.prevent="onSubmit($event.target as HTMLFormElement)">
+  <form @submit.prevent="onSubmit" ref="form">
     <input type="text" name="title" />
     <input type="file" name="image" />
     <button type="submit" class="">Отправить</button>
   </form>
 
-  <HdAvatar :src="src" />
+  <HdrtDragzone :src="src" v-if="src && isShowAvatarDrag" @confirm="onConfirm" />
+  <div class="w-32 h-32 rounded-full overflow-hidden mx-auto border-4 border-rose-300">
+    <img :src="avatarSrc" class="object-cover w-full" alt="" v-if="avatarSrc" />
+    <div class="bg-rose-200 w-full h-full"></div>
+  </div>
   <!-- <div class="mx-auto mt-32 relative w-[600px] h-[700px] overflow-hidden" v-if="uploadProgress">
     <UploadPlaceholder :is-visible="isFileLoad" />
     <LazyHdPicture :src="src" :handler="onLoad" v-if="src" />
