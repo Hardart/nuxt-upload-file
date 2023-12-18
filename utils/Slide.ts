@@ -1,26 +1,23 @@
-import type { Avatar } from './Avatar'
-
 export class Slide {
   private root
   private src
   private borders
+  private ratio = 0
+  private zoomLevel = 1
   element = new Image()
   elementRect: ElementRect = { x: 0, y: 0, width: 0, height: 0 }
   initRect: ElementRect = { x: 0, y: 0, width: 0, height: 0 }
   panAreaSize: Point = { x: 0, y: 0 }
-  zoomLevel = 1
-  ratio = 0
   bounds
-  zoomInitial = false
 
-  constructor(root: Avatar, src: string) {
+  constructor(root: DragZone, src: string) {
     this.root = root
     this.src = src
     this.bounds = new PanBounds(this)
     this.borders = root.border!
   }
 
-  calculateSize() {
+  private calculateSize() {
     const { elementRect } = this
     elementRect.width = this.element.naturalWidth
     elementRect.height = this.element.naturalHeight
@@ -33,13 +30,33 @@ export class Slide {
   }
 
   init() {
-    this.preloadImage()
+    this.element.src = this.src
+    this.element.onload = this._onImageLoad.bind(this)
   }
 
-  private preloadImage() {
-    this.element.src = this.src
+  applyTransform() {
+    const { x, y } = this.elementRect
+    setTransform(this.element, x, y)
+  }
 
-    this.element.onload = this._onImageLoad.bind(this)
+  changeZoom(zoom: number) {
+    this.zoomLevel = zoom / 500
+    const { height, width } = this.initRect
+    const prop = this.isHorisontal ? width : height
+    const v = prop + prop * this.zoomLevel
+    this.customSize(v)
+    this.bounds.update()
+    this.root.gestures!.change()
+  }
+
+  correctRectValues() {
+    const keys = Object.keys(this.elementRect) as (keyof typeof this.elementRect)[]
+    keys.forEach(key => {
+      const value = this.elementRect[key]
+      this.elementRect[key] = Math.floor(value)
+    })
+    this.panAreaSize.x = Math.floor(this.panAreaSize.x)
+    this.panAreaSize.y = Math.floor(this.panAreaSize.y)
   }
 
   private _onImageLoad() {
@@ -49,8 +66,7 @@ export class Slide {
     this.borders.classList.add('opacity-100')
     this.element.classList.add('cursor-grab', 'absolute')
     this.borders.insertAdjacentElement('beforebegin', this.element)
-
-    this.root.gestures.bindEvents()
+    this.root.gestures!.bindEvents()
   }
 
   private get isHorisontal() {
@@ -83,11 +99,6 @@ export class Slide {
     setElementSize(this.borders, this.isHorisontal ? { height, width: height } : { width, height: width })
   }
 
-  applyTransform() {
-    const { x, y } = this.elementRect
-    setTransform(this.element, x, y)
-  }
-
   private correctSize() {
     this.calcRatio()
     this.customSize(this.correctImageSize)
@@ -95,32 +106,6 @@ export class Slide {
     this.calculateBorder()
     this.bounds.update()
   }
-
-  changeZoom(zoom: number) {
-    this.zoomLevel = zoom / 500
-    const { height, width } = this.initRect
-    const prop = this.isHorisontal ? width : height
-    const v = prop + prop * this.zoomLevel
-    this.customSize(v)
-    this.bounds.update()
-    this.root.gestures.change()
-  }
-
-  correctRectValues() {
-    const keys = Object.keys(this.elementRect) as (keyof typeof this.elementRect)[]
-    keys.forEach(key => {
-      const value = this.elementRect[key]
-      this.elementRect[key] = Math.round(value)
-    })
-  }
-
-  // zoomImage() {}
-  // calculateSize() {
-  //   const { width, height } = getElementRect(this.wrap)
-  //   const rootBounds = { x: width, y: height }
-  //   equalizePoints(this.panAreaSize, rootBounds)
-  //   this.zoomLevels.update(this.width, this.height, this.panAreaSize);
-  // }
 
   private get correctImageSize() {
     let value = this.ratio == 1 ? 370 : 550

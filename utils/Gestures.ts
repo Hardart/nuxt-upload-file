@@ -1,39 +1,37 @@
 type PointerType = 'up' | 'down' | 'move'
-import type { Avatar } from './Avatar'
 
 export class Gestures {
-  p1: Point = this.zeroPoint
-  p2: Point = this.zeroPoint
-  previousP1: Point = this.zeroPoint
-  previousP2: Point = this.zeroPoint
-  startP1: Point = this.zeroPoint
-  startP2: Point = this.zeroPoint
+  private p1: Point = this.zeroPoint
+  private p2: Point = this.zeroPoint
+  private previousP1: Point = this.zeroPoint
+  private previousP2: Point = this.zeroPoint
+  private startP1: Point = this.zeroPoint
+  private startP2: Point = this.zeroPoint
 
-  numActivePoints = 0
+  private numActivePoints = 0
 
-  velocityCalculated = false
-  isMultitouch = false
-  isDragging = false
-  isZooming = false
+  private isMultitouch = false
+  private isDragging = false
+  private isZooming = false
 
-  activePointers: Point[] = []
+  private activePointers: Point[] = []
 
   private touchEventEnabled = 'ontouchstart' in window
   private pointerEventEnabled = !!window.PointerEvent
   private supportsTouch = this.touchEventEnabled || (this.pointerEventEnabled && navigator.maxTouchPoints > 1)
   root
 
-  down: ((e: PointerEvent) => void) | null = null
-  move: ((e: PointerEvent) => void) | null = null
-  up: ((e: PointerEvent) => void) | null = null
+  private down: ((e: PointerEvent) => void) | null = null
+  private move: ((e: PointerEvent) => void) | null = null
+  private up: ((e: PointerEvent) => void) | null = null
 
-  constructor(rootClass: Avatar) {
+  constructor(rootClass: DragZone) {
     this.root = rootClass
   }
 
   bindEvents() {
     const { image, border } = this.root
-    if (!border) return
+    if (!border || !image) return
     this.down = this.onPointerDown.bind(this)
     this.move = this.onPointerMove.bind(this)
     this.up = this.onPointerUp.bind(this)
@@ -77,7 +75,7 @@ export class Gestures {
   }
 
   end() {
-    this.root.image.correctRectValues()
+    this.root.image!.correctRectValues()
 
     if (!this.isDragging) return
 
@@ -95,11 +93,13 @@ export class Gestures {
 
     this.setNewPan('x')
     this.setNewPan('y')
-    image.applyTransform()
+    image!.applyTransform()
   }
 
   setNewPan(axis: Axis) {
-    const { elementRect, bounds } = this.root.image
+    const { image } = this.root
+    if (!image) return
+    const { elementRect, bounds } = image
     const potentialPan = this.p1[axis] - this.previousP1[axis]
 
     elementRect[axis] += potentialPan

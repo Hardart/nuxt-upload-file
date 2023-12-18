@@ -1,10 +1,9 @@
-export {}
-
-import type { Gestures, Slide } from '#imports'
+import type { Gestures as GesturesClass, Slide as SlideClass, DragZone as DragZoneClass } from '#imports'
 
 declare global {
-  type Gestures = Gestures
-  type Slide = Slide
+  type Gestures = GesturesClass
+  type Slide = SlideClass
+  type DragZone = DragZoneClass
 
   type Point = {
     x: number

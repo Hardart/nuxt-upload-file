@@ -47,3 +47,8 @@ export function clamp(val: number, min: number, max: number) {
 export function getElementRect(el: HTMLElement) {
   return el.getBoundingClientRect()
 }
+
+export function notNullGuard<T>(el: T | null): T {
+  if (el === null) throw createError('element is NOT defined')
+  return el
+}

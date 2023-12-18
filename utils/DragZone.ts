@@ -2,7 +2,6 @@ export class DragZone {
   root: HTMLElement | null = null
   wrap: HTMLElement | null = null
   border: HTMLElement | null = null
-  offset: Point = { x: 0, y: 0 }
   wrapRect: ElementRect = { x: 0, y: 0, width: 0, height: 0 }
   gestures: Gestures | null = null
   image: Slide | null = null
@@ -17,20 +16,20 @@ export class DragZone {
   }
 
   onChangeZoom(zoom: number) {
+    this.image = notNullGuard(this.image)
     this.image.changeZoom(zoom)
   }
 
   get imageProps() {
+    this.image = notNullGuard(this.image)
     this.image.correctRectValues()
     const { elementRect, panAreaSize } = this.image
-
-    return { elementRect, panAreaSize }
+    return { elementRect, crop: panAreaSize.x }
   }
 
   private elementGuard<T extends Element>(elClass: string, parentElement?: HTMLElement) {
     const parent = parentElement ? parentElement : document
     const el = parent.querySelector<T>(elClass)
-
     if (!el) throw createError(`Can't find element with class ${elClass}`)
     return el
   }

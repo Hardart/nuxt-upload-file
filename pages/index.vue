@@ -50,10 +50,6 @@ function uploadForm(url: string, formElement: HTMLFormElement) {
     <img :src="avatarSrc" class="object-cover w-full" alt="" v-if="avatarSrc" />
     <div class="bg-rose-200 w-full h-full"></div>
   </div>
-  <!-- <div class="mx-auto mt-32 relative w-[600px] h-[700px] overflow-hidden" v-if="uploadProgress">
-    <UploadPlaceholder :is-visible="isFileLoad" />
-    <LazyHdPicture :src="src" :handler="onLoad" v-if="src" />
-  </div> -->
 </template>
 
 <style scoped></style>
