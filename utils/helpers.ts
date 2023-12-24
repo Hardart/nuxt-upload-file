@@ -52,3 +52,7 @@ export function notNullGuard<T>(el: T | null): T {
   if (el === null) throw createError('element is NOT defined')
   return el
 }
+
+export async function delay(ms: number = 0) {
+  return new Promise(res => setTimeout(res, ms))
+}

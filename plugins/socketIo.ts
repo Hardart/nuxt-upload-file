@@ -9,7 +9,7 @@ export default defineNuxtPlugin(() => {
 
   return {
     provide: {
-      ws: () => io(url, { auth: { token: 'hello' } }),
+      ws: (token: string | null) => io(url, { auth: { token } }),
     },
   }
 })
