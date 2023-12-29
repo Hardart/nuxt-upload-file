@@ -1,6 +1,6 @@
 import fs from 'fs'
 export default defineEventHandler(event => {
-  return foldersMap('../assets/images/photos/')
+  return foldersMap('../assets/photos/')
 })
 
 function foldersMap(path: string): string[] {
