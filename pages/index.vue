@@ -22,7 +22,7 @@ const isHorisontal = computed(() => angle)
 </script>
 
 <template>
-  <div class="space-y-52">
+  <div class="space-y-52 absolute">
     <div
       class="wrap h-screen flex justify-center"
       :class="[itemsState[index] && 'rotat']"
@@ -33,7 +33,7 @@ const isHorisontal = computed(() => angle)
         <img :src="imageSrc" class="object-contain h-full" alt="" loading="lazy" />
       </div>
       <div class="wrap_reverse">
-        <img :src="data![index + mult]" loading="lazy" alt="" />
+        <img :src="data![index + mult]" loading="lazy" class="object-contain h-full" alt="" />
       </div>
     </div>
   </div>
