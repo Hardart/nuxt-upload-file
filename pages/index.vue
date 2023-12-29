@@ -24,7 +24,7 @@ const isHorisontal = computed(() => angle)
 <template>
   <div class="space-y-52 absolute">
     <div
-      class="wrap h-screen flex justify-center"
+      class="wrap h-screen flex justify-center items-center"
       :class="[itemsState[index] && 'rotat']"
       v-for="(imageSrc, index) in data?.slice(0, mult)"
       @dblclick="toggleItemState(index)"
