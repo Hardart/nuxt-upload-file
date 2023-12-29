@@ -1,6 +1,6 @@
 import fs from 'fs'
 export default defineEventHandler(event => {
-  return foldersMap('./public/images/')
+  return foldersMap('../assets/images/photos/')
 })
 
 function foldersMap(path: string): string[] {
@@ -9,7 +9,7 @@ function foldersMap(path: string): string[] {
     .flatMap(f => {
       const fullPath = path + f
       if (fs.lstatSync(fullPath).isDirectory()) return foldersMap(fullPath + '/')
-      return fullPath.replace(/^.\/public/, '')
+      return fullPath.replace(/^..\/assets/, '')
     })
     .filter(item => !item.includes('.DS_Store'))
 }
