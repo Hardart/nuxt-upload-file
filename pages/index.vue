@@ -22,7 +22,7 @@ const isHorisontal = computed(() => angle)
 </script>
 
 <template>
-  <div class="space-y-52 absolute mt-[500px]">
+  <div class="space-y-52 absolute mt-[500px] w-full">
     <div
       class="wrap h-screen flex justify-center items-center"
       :class="[itemsState[index] && 'rotat']"
