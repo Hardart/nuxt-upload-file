@@ -32,7 +32,7 @@ const isHorisontal = computed(() => angle)
       <div class="wrap__container h-full">
         <img :src="imageSrc" class="object-contain h-full" alt="" loading="lazy" />
       </div>
-      <div class="wrap_reverse">
+      <div class="wrap_reverse h-full">
         <img :src="data![index + mult]" loading="lazy" class="object-contain h-full" alt="" />
       </div>
     </div>
