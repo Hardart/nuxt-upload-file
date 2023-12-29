@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { useScreenOrientation } from '@vueuse/core'
 
-const { isSupported, orientation, angle, lockOrientation, unlockOrientation } = useScreenOrientation()
+const { angle } = useScreenOrientation()
 
-const { data } = await useFetch('/api/files')
-if (!data.value) throw createError('')
+const { data } = await useFetch('/api/files', { query: { folder: 'photos' } })
+if (!data.value) throw createError('No images')
 const itemsState = ref<{ [key: number]: boolean }>({})
 
 for (let i = 0; i < data.value.length / 2; i++) {

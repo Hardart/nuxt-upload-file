@@ -1,6 +1,8 @@
 import fs from 'fs'
-export default defineEventHandler(event => {
-  return foldersMap('../assets/photos/')
+export default defineEventHandler(async event => {
+  const { folder } = getQuery(event)
+
+  return foldersMap(`../assets/${folder}/`)
 })
 
 function foldersMap(path: string): string[] {
