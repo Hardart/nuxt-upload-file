@@ -11,7 +11,10 @@ export default defineEventHandler(async event => {
   const top = Math.floor((height - crop) / 2 - elementRect.y)
   const name = (size: number) => `/images/avatar_${imageId}_${size}.webp`
 
-  const buff = await sharp(file).resize({ width: elementRect.width, height: elementRect.height }).extract({ left, top, height: crop, width: crop }).toBuffer()
+  const buff = await sharp(file)
+    .resize({ width: elementRect.width, height: elementRect.height })
+    .extract({ left, top, height: crop, width: crop })
+    .toBuffer()
   for (let size of sizes) {
     const image = await sharp(buff).resize({ width: size }).webp({ quality: 75 }).toBuffer()
     await useStorage('db').setItemRaw(name(size), image)
