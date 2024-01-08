@@ -8,5 +8,3 @@ if (!data.value) throw createError('No images')
     <img :src="src" v-for="src in data" alt="" />
   </div>
 </template>
-
-<style></style>

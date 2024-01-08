@@ -3,9 +3,9 @@ import fs from 'fs'
 
 export default defineEventHandler(async event => {
   // const buff = await sharp(file).resize({ width: elementRect.width, height: elementRect.height })
-  const filesPath = foldersMap('./assets/photos/')
-  // console.log(filesPath)
-  for (let path of filesPath) {
+  const pathsArray = foldersMap('./assets/photos/')
+
+  for (let path of pathsArray) {
     const file = fs.readFileSync(path)
     const { width } = await sharp(file).metadata()
     const webpFile = await toWebp(width, file)
@@ -17,10 +17,6 @@ export default defineEventHandler(async event => {
       console.log(error)
     }
   }
-
-  // const webpFile = await toWebp()
-  // console.log(webpFile)
-  // fs.unlinkSync(path)
 })
 
 function foldersMap(path: string): string[] {
