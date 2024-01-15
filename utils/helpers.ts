@@ -19,8 +19,8 @@ export function setTransform(el: HTMLElement, x: number, y: number, scale?: numb
   el.style.transform = toTransformString(x, y, scale)
 }
 
-function toTransformString(x: number, y: number, scale?: number) {
-  let propValue = `translate3d(${x}px,${y || 0}px,0)`
+export function toTransformString(x: number, y: number, scale?: number) {
+  let propValue = `transform: translate3d(${x}px,${y || 0}px,0)`
 
   if (scale !== undefined) {
     propValue += ` scale3d(${scale},${scale},1)`
