@@ -1,18 +1,6 @@
-import { zeroPoint } from './dragPoint'
-
-const center = ref<Point>(zeroPoint)
-const max = ref<Point>(zeroPoint)
-const min = ref<Point>(zeroPoint)
-
-function updateAxis(axis: Axis, sizeValue: number, panAreaSize: number) {
-  center.value[axis] = 0
-
-  // maximum pan position
-  max.value[axis] = sizeValue > panAreaSize ? Math.round((panAreaSize - sizeValue) / 2) : 0
-
-  // minimum pan position
-  min.value[axis] = sizeValue > panAreaSize ? Math.round((panAreaSize - sizeValue) / 2) * -1 : 0
-}
+const center = ref<Point>({ x: 0, y: 0 })
+const maxBoundValue = ref<Point>({ x: 0, y: 0 })
+const minBoundValue = ref<Point>({ x: 0, y: 0 })
 
 export function updateBounds(image: MaybeEl, panArea: MaybeEl) {
   // if (!this.image.elementRect.width) return this.reset()
@@ -23,6 +11,22 @@ export function updateBounds(image: MaybeEl, panArea: MaybeEl) {
   updateAxis('y', imageRect.height, panAreaRect.height)
 }
 
-export function correctPan(axis: Axis, panOffset: number) {
-  return clamp(panOffset, max.value[axis], min.value[axis])
+export function correctPanBounds(panOffset: Point, position: Ref<Point>) {
+  const x = correctPan('x', panOffset.x)
+  const y = correctPan('y', panOffset.y)
+  position.value = { x, y }
+}
+
+function correctPan(axis: Axis, panOffset: number) {
+  return clamp(panOffset, maxBoundValue.value[axis], minBoundValue.value[axis])
+}
+
+function updateAxis(axis: Axis, sizeValue: number, panAreaSize: number) {
+  center.value[axis] = 0
+
+  // maximum pan position
+  maxBoundValue.value[axis] = sizeValue > panAreaSize ? Math.round((panAreaSize - sizeValue) / 2) : 0
+
+  // minimum pan position
+  minBoundValue.value[axis] = sizeValue > panAreaSize ? Math.round((panAreaSize - sizeValue) / 2) * -1 : 0
 }

@@ -7,6 +7,7 @@ interface IDragOptions {
 export const useDrag = (panArea: MaybeEl, options: IDragOptions) => {
   const { imageElement } = options
   const position = ref<Point>({ x: 0, y: 0 })
+  const delta = { x: 0, y: 0 }
   let isDragging = false
 
   const start = (e: PointerEvent) => {
@@ -22,10 +23,9 @@ export const useDrag = (panArea: MaybeEl, options: IDragOptions) => {
 
     const { x, y } = getDelta()
 
-    position.value.x += x
-    position.value.y += y
-    const correctX = correctPan('x', position.value.x)
-    console.log(correctX)
+    delta.x += x
+    delta.y += y
+    correctPanBounds(delta, position)
   }
 
   const end = (e: PointerEvent) => {

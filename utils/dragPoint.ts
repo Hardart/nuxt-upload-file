@@ -1,4 +1,4 @@
-export const zeroPoint: Point = { x: 0, y: 0 }
+const zeroPoint: Point = { x: 0, y: 0 }
 
 export const p1 = ref(zeroPoint)
 const p2 = ref(zeroPoint)
