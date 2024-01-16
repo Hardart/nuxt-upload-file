@@ -1,18 +1,5 @@
-export function equalizePoints(p1: Point, p2: Point) {
-  p1.x = p2.x
-  p1.y = p2.y
-  if (p2.id !== undefined) p1.id = p2.id
-
-  return p1
-}
-
 export function pointsEqual(p1: Point, p2: Point) {
   return p1.x === p2.x && p1.y === p2.y
-}
-
-export function roundPoint(p: Point) {
-  p.x = Math.round(p.x)
-  p.y = Math.round(p.y)
 }
 
 export function setTransform(el: HTMLElement, x: number, y: number, scale?: number) {
