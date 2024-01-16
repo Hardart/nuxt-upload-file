@@ -1,4 +1,3 @@
-const center = ref<Point>({ x: 0, y: 0 })
 const maxBoundValue = ref<Point>({ x: 0, y: 0 })
 const minBoundValue = ref<Point>({ x: 0, y: 0 })
 
@@ -22,11 +21,6 @@ function correctPan(axis: Axis, panOffset: number) {
 }
 
 function updateAxis(axis: Axis, sizeValue: number, panAreaSize: number) {
-  center.value[axis] = 0
-
-  // maximum pan position
   maxBoundValue.value[axis] = sizeValue > panAreaSize ? Math.round((panAreaSize - sizeValue) / 2) : 0
-
-  // minimum pan position
   minBoundValue.value[axis] = sizeValue > panAreaSize ? Math.round((panAreaSize - sizeValue) / 2) * -1 : 0
 }

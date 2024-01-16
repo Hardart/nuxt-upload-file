@@ -1,11 +1,8 @@
 import { defaultWindow, isClient } from '@vueuse/core'
 
-interface IDragOptions {
-  imageElement: MaybeEl
-}
+interface IDragOptions {}
 
-export const useDrag = (panArea: MaybeEl, options: IDragOptions) => {
-  const { imageElement } = options
+export const useDrag = (panArea: MaybeEl, imageElement: MaybeEl) => {
   const position = ref<Point>({ x: 0, y: 0 })
   const delta = { x: 0, y: 0 }
   let isDragging = false
