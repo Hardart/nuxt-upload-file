@@ -43,3 +43,9 @@ export function notNullGuard<T>(el: T | null): T {
 export async function delay(ms: number = 0) {
   return new Promise(res => setTimeout(res, ms))
 }
+
+export function roundPoint(p: Point) {
+  p.x = Math.round(p.x)
+  p.y = Math.round(p.y)
+  return p
+}
