@@ -40,6 +40,7 @@ export function avatarResize(panArea: MaybeRefElement, src: string) {
 
   const correctImageSize = (value?: number) => {
     const { width, height } = panRect.value
+
     switch (true) {
       case isHorisontal.value && ratio.value !== 1:
         imageRect.value.height = value ? value : height
@@ -60,8 +61,8 @@ export function avatarResize(panArea: MaybeRefElement, src: string) {
   watch(zoomValue, () => {
     const zoom = zoomValue.value / 500
     const { height, width } = imageSize!
-    const prop = isHorisontal ? width : height
-    const v = prop + prop * zoom
+    const prop = isHorisontal.value ? height : width
+    const v = Math.floor(prop + prop * zoom)
     correctImageSize(v)
     updateBounds(imageRect, panRect)
     setPositionOnMove(imageTransform)

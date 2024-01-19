@@ -12,12 +12,12 @@ useHead({
 </script>
 
 <template>
-  <div class="fixed inset-0 grid mx-2">
+  <div class="fixed inset-0 m-2">
     <div class="w-full h-80 sm:w-2/3 lg:w-1/3 lg:h-1/2 bg-slate-600 grid place-items-center relative overflow-hidden" v-if="isLoading">
       <img class="absolute select-none" @dragstart.prevent :src="imageSrc" :style="imageStyle" />
       <div ref="panArea" class="w-44 h-44 bg-black/25 shadow-hdrt absolute" :style="panStyle"></div>
     </div>
-    <div class="my-4 mx-4 md:mx-10 lg:mx-14">
+    <div class="m-10 md:mx-10 lg:mx-14">
       <input
         type="range"
         min="1"
