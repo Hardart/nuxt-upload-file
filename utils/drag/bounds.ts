@@ -1,18 +1,17 @@
 const maxBoundValue = ref<Point>({ x: 0, y: 0 })
 const minBoundValue = ref<Point>({ x: 0, y: 0 })
 
-export function updateBounds(image: MaybeEl, panArea: MaybeEl) {
-  // if (!this.image.elementRect.width) return this.reset()
-  const imageRect = toValue(image)!.getBoundingClientRect()
-  const panAreaRect = toValue(panArea)!.getBoundingClientRect()
+export function updateBounds(imageRect: MaybeRef<ElementSize>, panRect: MaybeRef<ElementSize>) {
+  imageRect = toValue(imageRect)
+  panRect = toValue(panRect)
 
-  updateAxis('x', imageRect.width, panAreaRect.width)
-  updateAxis('y', imageRect.height, panAreaRect.height)
+  updateAxis('x', imageRect.width, panRect.width)
+  updateAxis('y', imageRect.height, panRect.height)
 }
 
-export function correctPanBounds(panOffset: Point, position: Ref<Point>) {
-  const x = correctPan('x', panOffset.x)
-  const y = correctPan('y', panOffset.y)
+export function correctPanBounds(position: Ref<Point>) {
+  const x = correctPan('x', toValue(position).x)
+  const y = correctPan('y', toValue(position).y)
   position.value = { x, y }
 }
 

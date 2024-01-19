@@ -1,4 +1,4 @@
-export class Slide {
+export class ImageItem {
   private root
   private src
   private borders

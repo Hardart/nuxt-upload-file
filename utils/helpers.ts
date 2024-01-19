@@ -31,7 +31,9 @@ export function clamp(val: number, min: number, max: number) {
   return Math.min(Math.max(val, min), max)
 }
 
-export function getElementRect(el: HTMLElement) {
+export function getElementRect(el: MaybeRefElement): DOMRect {
+  el = toValue(el)
+  if (!el) throw createError(`Element is null or undefined`)
   return el.getBoundingClientRect()
 }
 

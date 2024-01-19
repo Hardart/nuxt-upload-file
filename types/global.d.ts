@@ -1,7 +1,7 @@
 import type { Gestures as GesturesClass, Slide as SlideClass, DragZone as DragZoneClass } from '#imports'
 
 declare global {
-  type Maybe<T> = Ref<T | undefined> | T | undefined
+  type Maybe<T> = MaybeRef<T | null>
   type Gestures = GesturesClass
   type Slide = SlideClass
   type DragZone = DragZoneClass
@@ -18,6 +18,7 @@ declare global {
   }
 
   type MaybeEl = MaybeRefOrGetter<HTMLElement | null>
+  type MaybeRefElement<T = HTMLElement> = MaybeRefOrGetter<T | null>
 
   type ElementRect = ElementSize & Omit<Point, 'id'>
 
