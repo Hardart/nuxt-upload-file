@@ -4,8 +4,8 @@ import { updateBounds } from './drag/bounds'
 
 export function avatarResize(panArea: MaybeRefElement, src: string) {
   const isLoading = ref(false)
-  const imageTransform = ref<Point>({ x: 0, y: 0 })
   const zoomValue = ref(0)
+  const imageTransform = ref<Point>({ x: 0, y: 0 })
   const preloadImage = ref<HTMLImageElement>()
   const imageRect = ref<ElementSize>({ width: 0, height: 0 })
   const panRect = ref<ElementSize>({ width: 270, height: 270 })
@@ -40,20 +40,20 @@ export function avatarResize(panArea: MaybeRefElement, src: string) {
 
   const correctImageSize = (value?: number) => {
     const { width, height } = panRect.value
-
+    const image = toValue(imageRect)
     switch (true) {
       case isHorisontal.value && ratio.value !== 1:
-        imageRect.value.height = value ? value : height
-        imageRect.value.width = imageRect.value.height * ratio.value
+        image.height = value ? value : height
+        image.width = image.height * ratio.value
         break
       case !isHorisontal.value && ratio.value !== 1:
-        imageRect.value.width = value ? value : width
-        imageRect.value.height = imageRect.value.width / ratio.value
+        image.width = value ? value : width
+        image.height = image.width / ratio.value
         break
 
       default:
-        imageRect.value.width = value ? value : width
-        imageRect.value.height = value ? value : width
+        image.width = value ? value : width
+        image.height = value ? value : width
         break
     }
   }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const panArea = ref<HTMLElement | null>(null)
 
-const src = '/images/pasha.jpg'
+const src = '/images/blog.jpg'
 // const { style } = useDrag(panArea, imageElement)
 const { isLoading, imageSrc, imageStyle, panStyle, zoomValue } = avatarResize(panArea, src)
 useHead({
