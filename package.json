@@ -14,8 +14,9 @@
     "@nuxt/image": "^1.1.0",
     "@vueuse/core": "^10.7.0",
     "@vueuse/nuxt": "^10.7.0",
-    "nuxt": "^3.8.2",
-    "vue": "^3.3.8",
+    "nuxt": "^3.9.3",
+    "nuxt-icon": "^0.6.8",
+    "vue": "^3.4.1",
     "vue-router": "^4.2.5"
   },
   "dependencies": {

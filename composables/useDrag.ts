@@ -1,45 +1,77 @@
-import { defaultWindow, isClient } from '@vueuse/core'
-import { updateBounds, correctPanBounds } from '~/utils/drag/bounds'
-import { p1, prevP1, eventPositionToPoint, getDelta } from '~/utils/drag/point'
+import { isClient } from '@vueuse/core'
+import { setPositionOnMove, useTouch } from '@/utils/drag/useTouch'
+import { updateBounds } from '@/utils/drag/bounds'
+import { roundPoint } from '~/utils/drag/point'
 
-export const useDrag = (panArea: Maybe<HTMLElement>, imageElement: MaybeEl) => {
-  const position = ref<Point>({ x: 0, y: 0 })
-  const delta = { x: 0, y: 0 }
-  const panAreaRect = ref()
-  let isDragging = false
-
-  const start = (e: PointerEvent) => {
-    if (e.target !== toValue(panArea)) return
-    prevP1.value = eventPositionToPoint(e, { x: 0, y: 0 })
-    isDragging = true
-    // updateBounds(imageElement, panArea)
-  }
-
-  const move = (e: PointerEvent) => {
-    if (!isDragging) return
-    eventPositionToPoint(e, p1)
-
-    const { x, y } = getDelta()
-
-    delta.x += x
-    delta.y += y
-    correctPanBounds(delta, position)
-  }
-
-  const end = (e: PointerEvent) => {
-    if (!isDragging) return
-    isDragging = false
-  }
+export function useDrag(panArea: MaybeRefElement, src: string) {
+  const zoomValue = ref(0)
+  const preloadImage = ref<HTMLImageElement>()
+  const imageRect = ref<ElementRect>({ x: 0, y: 0, width: 0, height: 0 })
+  const panRect = ref<ElementSize>({ width: 270, height: 270 })
+  const preloadImageSource = ref('')
+  let imageSize
 
   if (isClient) {
-    // panAreaRect.value = getElementRect(panArea)
-    const config = { capture: true }
-    useEventListener(panArea, 'pointerdown', start, config)
-    useEventListener(defaultWindow, 'pointermove', move, config)
-    useEventListener(defaultWindow, 'pointerup', end, config)
+    preloadImage.value = new Image()
+    preloadImage.value.src = src
+    preloadImage.value.onload = onLoadImage
   }
 
+  function onLoadImage() {
+    imageRect.value.width = preloadImage.value!.naturalWidth
+    imageRect.value.height = preloadImage.value!.naturalHeight
+    preloadImageSource.value = src
+    correctImageSize()
+    imageSize = { ...imageRect.value }
+
+    useTouch(panArea, imageRect, panRect)
+  }
+
+  const isHorisontal = computed(() => toValue(preloadImage)!.height < toValue(preloadImage)!.width)
+
+  const ratio = computed(() => {
+    const image = toValue(preloadImage)!
+    const { height, width } = image
+    return isHorisontal ? width / height : height / width
+  })
+
+  const correctImageSize = (value?: number) => {
+    const { width, height } = panRect.value
+
+    switch (true) {
+      case isHorisontal.value && ratio.value !== 1:
+        imageRect.value.height = value ? value : height
+        imageRect.value.width = imageRect.value.height * ratio.value
+        break
+      case !isHorisontal.value && ratio.value !== 1:
+        imageRect.value.width = value ? value : width
+        imageRect.value.height = imageRect.value.width / ratio.value
+        break
+
+      default:
+        imageRect.value.width = value ? value : width
+        imageRect.value.height = value ? value : width
+        break
+    }
+    roundPoint(imageRect)
+  }
+
+  watch(zoomValue, () => {
+    const zoom = zoomValue.value / 500
+    const { height, width } = imageSize!
+    const prop = isHorisontal.value ? height : width
+    const v = prop + prop * zoom
+    correctImageSize(v)
+    updateBounds(imageRect, panRect)
+    setPositionOnMove(imageRect)
+  })
+
   return {
-    style: computed(() => toTransformString(position.value.x, position.value.y)),
+    imageRect,
+    zoomValue,
+
+    preloadImageSource,
+    imageStyle: computed(() => toStyleString(imageRect, true)),
+    panStyle: computed(() => `width: ${panRect.value.width}px; height: ${panRect.value.height}px`),
   }
 }

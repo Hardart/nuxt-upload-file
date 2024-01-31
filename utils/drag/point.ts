@@ -1,7 +1,7 @@
 export const p1 = ref({ x: 0, y: 0 })
-const p2 = ref({ x: 0, y: 0 })
+export const p2 = ref({ x: 0, y: 0 })
 export const prevP1 = ref({ x: 0, y: 0 })
-const prevP2 = ref({ x: 0, y: 0 })
+export const prevP2 = ref({ x: 0, y: 0 })
 
 export function equalizePoints(p1: MaybeRef<Point>, p2: MaybeRef<Point>) {
   p1 = toValue(p1)
@@ -13,7 +13,9 @@ export function equalizePoints(p1: MaybeRef<Point>, p2: MaybeRef<Point>) {
   return p1
 }
 
-export function isPointsEqual(p1: Point, p2: Point) {
+export function isPointsEqual(p1: MaybeRef<Point>, p2: MaybeRef<Point>) {
+  p1 = toValue(p1)
+  p2 = toValue(p2)
   return p1.x === p2.x && p1.y === p2.y
 }
 
@@ -33,6 +35,15 @@ export function getDelta() {
   const y = p1.value.y - prevP1.value.y
   updatePrevPoints()
   return { x, y }
+}
+
+export function roundPoint(rect: MaybeRef<ElementRect>) {
+  rect = toValue(rect)
+
+  rect.x = Math.round(rect.x)
+  rect.y = Math.round(rect.y)
+  rect.width = Math.round(rect.width)
+  rect.height = Math.round(rect.height)
 }
 
 function updatePrevPoints() {

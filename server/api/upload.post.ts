@@ -3,12 +3,17 @@ import sharp from 'sharp'
 const exts = ['webp', 'avif'] as const
 
 export default defineEventHandler(async event => {
-  const formData = await readMultipartFormData(event)
-  if (!formData) return
-  const body = formData.reduce(reduceBody, {} as Record<string, any>)
-  const fileName = await saveFile(body.image, body.title)
+  try {
+    const formData = await readMultipartFormData(event)
+    if (!formData) return
+    const body = formData.reduce(reduceBody, {} as Record<string, any>)
+    console.log(body)
+    const data = await saveFile(body.image, body.title)
 
-  return fileName
+    return { data, error: null }
+  } catch (error) {
+    return { data: null, error }
+  }
 })
 
 async function saveFile(file: Buffer, folder: string) {
@@ -24,9 +29,6 @@ async function saveFile(file: Buffer, folder: string) {
   //   await useStorage('db').setItemRaw(name, file.data)
   // }
 
-  // const screenWidth = [372, 672, 744, 972, 1272, 1344]
-  // const sizes = [300, 600]
-  // const sizes = [300, 600, 730, 800, 960, 1200]
   const image = await sharp(file).resize({ width: 1200 }).jpeg().toBuffer()
   await useStorage('db').setItemRaw(path(), image)
 

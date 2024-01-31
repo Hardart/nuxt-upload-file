@@ -1,7 +1,7 @@
 const maxBoundValue = ref<Point>({ x: 0, y: 0 })
 const minBoundValue = ref<Point>({ x: 0, y: 0 })
 
-export function updateBounds(imageRect: MaybeRef<ElementSize>, panRect: MaybeRef<ElementSize>) {
+export function updateBounds(imageRect: MaybeRef<ElementRect>, panRect: MaybeRef<ElementSize>) {
   imageRect = toValue(imageRect)
   panRect = toValue(panRect)
 
@@ -9,10 +9,10 @@ export function updateBounds(imageRect: MaybeRef<ElementSize>, panRect: MaybeRef
   updateAxis('y', imageRect.height, panRect.height)
 }
 
-export function correctPanBounds(position: Ref<Point>) {
-  const x = correctPan('x', toValue(position).x)
-  const y = correctPan('y', toValue(position).y)
-  position.value = { x, y }
+export function correctPanBounds(rect: MaybeRef<ElementRect>) {
+  rect = toValue(rect)
+  rect.x = correctPan('x', rect.x)
+  rect.y = correctPan('y', rect.y)
 }
 
 function correctPan(axis: Axis, panOffset: number) {
@@ -20,6 +20,6 @@ function correctPan(axis: Axis, panOffset: number) {
 }
 
 function updateAxis(axis: Axis, sizeValue: number, panAreaSize: number) {
-  maxBoundValue.value[axis] = sizeValue > panAreaSize ? Math.round((panAreaSize - sizeValue) / 2) : 0
-  minBoundValue.value[axis] = sizeValue > panAreaSize ? Math.round((panAreaSize - sizeValue) / 2) * -1 : 0
+  maxBoundValue.value[axis] = sizeValue > panAreaSize ? (panAreaSize - sizeValue) / 2 : 0
+  minBoundValue.value[axis] = sizeValue > panAreaSize ? ((panAreaSize - sizeValue) / 2) * -1 : 0
 }
